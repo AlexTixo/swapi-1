@@ -30,7 +30,7 @@ class SWRequester(APIRequester):
         return self.get('/')
 
     def get_sw_info(self, sw_type):
-        return self.get('/'+sw_type+'/') 
+        return self.get('/'+sw_type+'/')
 
 
 def save_sw_data():
