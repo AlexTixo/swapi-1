@@ -46,4 +46,5 @@ def save_sw_data():
         print(f'Данные для {i} сохранены в {file_name}')
 
 
-save_sw_data()
+if __name__ == "__main__":
+    save_sw_data()
