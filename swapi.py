@@ -8,31 +8,29 @@ class APIRequester:
         self.base_url = base_url
         self.response = None
 
-    def get(self):
+    def get(self, endpoint):
+        full_url = self.base_url + endpoint
         try:
-            response = requests.get(self.base_url, verify=False)
+            response = requests.get(full_url, verify=False)
             response.raise_for_status()
             self.response = response.json()
-        except requests.RequestException as e:
-            print(f'Ошибка при выполнении запроса: {e}')
+        except requests.RequestException:
+            print('Возникла ошибка при выполнении запроса')
             self.response = None
+        print(full_url)
+        return self.response
 
 
 class SWRequester(APIRequester):
-    url = 'https://swapi.dev/api/'
-    base_url = url
 
-    def __init__(self):
-        super().__init__(self.base_url)
+    def __init__(self, base_url='https://swapi.dev/api'):
+        super().__init__(base_url)
 
     def get_sw_categories(self):
-        self.get()
-        return self.response
+        return self.get('/')
 
     def get_sw_info(self, sw_type):
-        self.base_url = self.url + sw_type
-        self.get()
-        return self.response
+        return self.get('/'+sw_type+'/') 
 
 
 def save_sw_data():
@@ -40,12 +38,12 @@ def save_sw_data():
     os.makedirs("data", exist_ok=True)
     categories = item.get_sw_categories()
     cats = list(categories.keys())
-    print(cats)
     for i in cats:
         info = item.get_sw_info(i)
         file_name = 'data/' + i + '.txt'
-        with open(file_name, 'w') as f:
+        with open(file_name, 'w', encoding='utf-8') as f:
             f.write(str(info))
+        print(f'Данные для {i} сохранены в {file_name}')
 
 
 save_sw_data()
